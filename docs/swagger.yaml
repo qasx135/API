@@ -1,0 +1,129 @@
+definitions:
+  models.Song:
+    properties:
+      group:
+        type: string
+      id:
+        type: integer
+      lyrics:
+        type: string
+      song:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /songs:
+    get:
+      consumes:
+      - application/json
+      description: Возвращает все песни с фильтрацией и пагинацией.
+      parameters:
+      - description: Фильтр по группе
+        in: query
+        name: group
+        type: string
+      - description: Фильтр по названию песни
+        in: query
+        name: song
+        type: string
+      - description: Номер страницы для пагинации
+        in: query
+        name: page
+        type: integer
+      - description: Количество записей на странице
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Возвращает общее количество и массив песен
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получение списка песен
+      tags:
+      - songs
+    post:
+      consumes:
+      - application/json
+      description: Создает новую песню в базе данных.
+      parameters:
+      - description: Данные новой песни
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.Song'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Созданная песня
+          schema:
+            $ref: '#/definitions/models.Song'
+        "400":
+          description: Ошибки валидации
+          schema:
+            type: string
+      summary: Добавление новой песни
+      tags:
+      - songs
+  /songs/{id}:
+    delete:
+      description: Удаляет песню по указанному ID.
+      parameters:
+      - description: ID песни
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Успешное удаление
+          schema:
+            type: string
+        "404":
+          description: Песня не найдена
+          schema:
+            type: string
+      summary: Удаление песни
+      tags:
+      - songs
+    put:
+      consumes:
+      - application/json
+      description: Изменяет данные песни по указанному ID.
+      parameters:
+      - description: ID песни
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Модель с обновленными данными песни
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Обновленная информация о песне
+          schema:
+            $ref: '#/definitions/models.Song'
+        "400":
+          description: Ошибки валидации
+          schema:
+            type: string
+        "404":
+          description: Песня не найдена
+          schema:
+            type: string
+      summary: Обновление данных песни
+      tags:
+      - songs
+swagger: "2.0"
